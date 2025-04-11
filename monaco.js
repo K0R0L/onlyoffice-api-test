@@ -15,7 +15,7 @@
         currentScriptDirectory = currentScriptDirectory.substr(0, currentScriptDirectoryIndex);
 
     var localWorkerPath = currentScriptDirectory + "/monaco/min/vs/base/worker/workerMain.js";
-    var localWorkerCodeSrc = "self.MonacoEnvironment = {baseUrl: '/'};importScript('" + localWorkerPath + ");";
+    var localWorkerCodeSrc = "self.MonacoEnvironment = {baseUrl: '/'};importScript('" + localWorkerPath + "');";
     var LOADIND_LOCAL = {
         URL : "./monaco/min/vs/loader.js",
         WORKER : ("data:text/javascript;charset=utf-8," + encodeURIComponent(localWorkerCodeSrc)),
