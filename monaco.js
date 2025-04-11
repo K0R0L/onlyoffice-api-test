@@ -133,7 +133,7 @@
     script.onload = function(){
         require.config({
             paths: {
-                "vs": return LOADING.BASE_VS;
+                "vs": return LOADING.BASE_VS
             }
         });
         
