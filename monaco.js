@@ -10,7 +10,7 @@
 
     var LOADIND_LOCAL = {
         URL : "./monaco/min/vs/loader.js",
-        WORKER : "./monaco/min/vs/editor/editor.worker.js",
+        WORKER : `data:text/javascript;charset=utf-8,${encodeURIComponent(`self.MonacoEnvironment = { baseUrl: '/' }; importScripts('./monaco/min/vs/base/worker/workerMain.js');`)}`,
         BASE_VS : "./monaco/min/vs"
     };
 
