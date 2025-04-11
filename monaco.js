@@ -4,7 +4,9 @@
 
     var LOADING_CDN = {
         URL : "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js",
-        WORKER : "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/editor/editor.worker.js",
+        WORKER : function(moduleId, label) { 
+            return "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/editor/editor.worker.js";
+        },
         BASE_VS : "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs"
     };
 
@@ -14,12 +16,27 @@
     if (currentScriptDirectoryIndex != -1)
         currentScriptDirectory = currentScriptDirectory.substr(0, currentScriptDirectoryIndex);
 
-    var localWorkerPath = currentScriptDirectory + "/monaco/min/vs/base/worker/workerMain.js";
-    var localWorkerCodeSrc = "self.MonacoEnvironment = {baseUrl: '/'};importScript('" + localWorkerPath + "');";
     var LOADIND_LOCAL = {
         URL : "./monaco/min/vs/loader.js",
-        WORKER : ("data:text/javascript;charset=utf-8," + encodeURIComponent(localWorkerCodeSrc)),
-        BASE_VS : "./monaco/min/vs"
+        WORKER : function(moduleId, label) {
+            return currentScriptDirectory + "/monaco/min/vs/base/worker/workerMain.js";
+            // this code does not work
+
+            const localWorkerPaths = {
+                'json': '/monaco/min/vs/language/json/jsonWorker.js',
+                'css': '/monaco/min/vs/language/css/cssWorker.js',
+                'html': '/monaco/min/vs/language/html/htmlWorker.js',
+                'typescript': '/monaco/min/vs/language/typescript/tsWorker.js',
+                'javascript': '/monaco/min/vs/language/typescript/tsWorker.js',
+                'base' : '/monaco/min/vs/base/worker/workerMain.js'
+            };
+            let localModulePath = localWorkerPaths[label] || localWorkerPaths['base'];
+            let localWorkerPath = currentScriptDirectory + localModulePath;
+            return localWorkerPath;
+            let localWorkerCodeSrc = "self.MonacoEnvironment = {baseUrl: '/'};importScripts('" + localWorkerPath + "');";
+            return "data:text/javascript;charset=utf-8," + encodeURIComponent(localWorkerCodeSrc);
+        },
+        BASE_VS : currentScriptDirectory + "/monaco/min/vs"
     };
 
     var LOADING = LOADIND_LOCAL;
@@ -131,7 +148,7 @@
 
     window.MonacoEnvironment = {
         getWorkerUrl: function (moduleId, label) {
-            return LOADING.WORKER;
+            return LOADING.WORKER(moduleId, label);
         }
     };
 
