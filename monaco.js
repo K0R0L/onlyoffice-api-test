@@ -1,8 +1,20 @@
 (function(){
 
     var LOADED_STATUS = false;
-    //var LOADING_URL = "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js";
-    var LOADING_URL = "./monaco/min/vs/loader.js";
+
+    var LOADING_CDN = {
+        URL : "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js",
+        WORKER : "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/editor/editor.worker.js",
+        BASE_VS : "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs"
+    };
+
+    var LOADIND_LOCAL = {
+        URL : "./monaco/min/vs/loader.js",
+        WORKER : "./monaco/min/vs/editor/editor.worker.js",
+        BASE_VS : "./monaco/min/vs"
+    };
+
+    var LOADING = LOADIND_LOCAL;
 
     var REGISTERED_EDITORS = [];
 
@@ -111,17 +123,17 @@
 
     window.MonacoEnvironment = {
         getWorkerUrl: function (moduleId, label) {
-            return "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/editor/editor.worker.js";
+            return LOADING.WORKER;
         }
     };
 
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = LOADING_URL;
+    script.src = LOADING.URL;
     script.onload = function(){
         require.config({
             paths: {
-                "vs": "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs"
+                "vs": return LOADING.BASE_VS;
             }
         });
         
