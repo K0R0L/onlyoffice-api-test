@@ -8,9 +8,17 @@
         BASE_VS : "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs"
     };
 
+    var currentScriptSrc = document.currentScript ? document.currentScript.src : location.href;
+    var currentScriptDirectory = currentScriptSrc;
+    currentScriptDirectoryIndex = currentScriptDirectory.lastIndexOf("/");
+    if (currentScriptDirectoryIndex != -1)
+        currentScriptDirectory = currentScriptDirectory.substr(0, currentScriptDirectoryIndex);
+
+    var localWorkerPath = currentScriptDirectory + "/monaco/min/vs/base/worker/workerMain.js";
+    var localWorkerCodeSrc = "self.MonacoEnvironment = {baseUrl: '/'};importScript('" + localWorkerPath + ");";
     var LOADIND_LOCAL = {
         URL : "./monaco/min/vs/loader.js",
-        WORKER : `data:text/javascript;charset=utf-8,${encodeURIComponent(`self.MonacoEnvironment = { baseUrl: '/' }; importScripts('./monaco/min/vs/base/worker/workerMain.js');`)}`,
+        WORKER : ("data:text/javascript;charset=utf-8," + encodeURIComponent(localWorkerCodeSrc)),
         BASE_VS : "./monaco/min/vs"
     };
 
